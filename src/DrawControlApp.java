@@ -6,6 +6,6 @@ public class DrawControlApp
 {
    public static void main( String args[] )
    {
-      JFrame frame = new ControlFrame( "Controlling Multimedia Projects..." );
+      JFrame frame = new ControlFrame( "Week 7 Assignment..." );
    }
 }

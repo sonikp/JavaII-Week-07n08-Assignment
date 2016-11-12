@@ -36,6 +36,9 @@ public class ControlFrame extends JFrame
   private JTextField yValTextField;
   private JLabel calcJLabel;
   private JButton calcJButton;
+  private ImageIcon imgIcon;
+  private String pictureImage;
+  private String soundFile;
   private JLabel soundJLabel;
   private JButton soundJButton;
   private JButton soundJButton1;
@@ -62,6 +65,22 @@ public class ControlFrame extends JFrame
     
     this.setContentPane( mainPanel );
     
+    final JMenuBar bar = new JMenuBar();  	// Create a JMenuBar so we can attach menus to it.
+    setJMenuBar( bar );  					// Attach the JMenuBar to the ControlFrame.
+
+  
+    
+    // Submenus
+    final JMenu colorMenu = new JMenu( "Color" );
+    colorMenu.setMnemonic( 'C' );
+    
+    final JMenu imageMenu = new JMenu( "Image" );
+    imageMenu.setMnemonic( 'I' );
+    
+    final JMenu soundMenu = new JMenu( "Sound" );
+    soundMenu.setMnemonic( 'S' );
+    
+    // create file menu
     JMenu fileMenu = new JMenu( "File" );
     fileMenu.setMnemonic( 'F' );
     JMenuItem aboutItem = new JMenuItem( "About..." );
@@ -72,32 +91,32 @@ public class ControlFrame extends JFrame
       {
         public void actionPerformed( ActionEvent event )
         {
-        	mainPanel.removeAll();          
+            mainPanel.remove( drawPanel );
+            mainPanel.remove( imageMenu );
+            bar.remove( colorMenu );
+            bar.remove( imageMenu );
+            mainPanel.remove( drawPanel );
+            mainPanel.remove( imageMenu );
+            mainPanel.remove( widthJSlider );
+        	mainPanel.removeAll(); 
+            validate();
+            repaint();
         	JOptionPane.showMessageDialog( ControlFrame.this,
-                                      "This application provides enhanced\n control over multimedia projects.",
+                                      "Assignment Week 07 \n"
+                                      + "This application provides enhanced\n"
+                                      + "control over multimedia projects.",
                                       "About", JOptionPane.PLAIN_MESSAGE );
-        	// ***still shows remains of "Show Picture" image. Not clean
+ 
         }
      }  // End of anonymous inner class
     );
       
-    final JMenuBar bar = new JMenuBar();  // Create a JMenuBar so we can attach menus to it.
-    setJMenuBar( bar );  // Attach the JMenuBar to the ControlFrame.
-    bar.add( fileMenu );  // Add the file menu to the JMenuBar.
-  
-    final JMenu colorMenu = new JMenu( "Color" );
-    colorMenu.setMnemonic( 'C' );
-    
-    final JMenu imageMenu = new JMenu( "Image" );
-    imageMenu.setMnemonic( 'I' );
-    
-    final JMenu soundMenu = new JMenu( "Sound" );
-    soundMenu.setMnemonic( 'S' );
-    
+    // Add the file menu to the JMenuBar.
+    bar.add( fileMenu );  					
 
     
  
-    
+    // Menu items
     JMenuItem redItem = new JMenuItem( "Red" );
     colorMenu.add( redItem );
     redItem.addActionListener(
@@ -183,8 +202,8 @@ public class ControlFrame extends JFrame
         {
           bar.add( colorMenu );  
           bar.remove( imageMenu );
+          bar.remove( soundMenu );
           mainPanel.removeAll();
-          //mainPanel.remove( calcPanel );
           drawPanel.setBackground( Color.WHITE );
           mainPanel.add( drawPanel, BorderLayout.CENTER );
           mainPanel.add( widthJSlider, BorderLayout.SOUTH );          
@@ -210,25 +229,24 @@ public class ControlFrame extends JFrame
         	mainPanel.removeAll();
         	bar.add( imageMenu );
         	
-        	String sname = "/Users/Shared/Java-Libraries/CourseCD/mediasources/arch.jpg";
-            
+        	pictureImage = "/Users/Shared/Java-Libraries/CourseCD/mediasources/arch.jpg"; 	// hardcoded for my convenience
+//        	pictureImage = FileChooser.pickAFile();											// hardcoded for assignment
 
-        	ImageIcon imgIcon = new ImageIcon(sname);
+        	// set  image as object and then assign it to JPanel
+        	imgIcon = new ImageIcon(pictureImage);
         	Image imageFile = imgIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         	JLabel picLabel = new JLabel(new ImageIcon(imageFile));
 
-
+        	// display image
         	mainPanel.add(picLabel, BorderLayout.CENTER);
-        	mainPanel.revalidate(); //ADD THIS AS WELL
-            mainPanel.repaint();  //ADD THIS AS WELL
-        	
-			
-
+        	revalidate(); 
+            repaint();  
 
         }
      }  // End of anonymous inner class
      );
     
+    // Filters applied to ShowImage function
     JMenuItem filterItemOne = new JMenuItem( "Filter One" );
     filterItemOne.setMnemonic( 'O' );
     imageMenu.add(filterItemOne);
@@ -240,11 +258,9 @@ public class ControlFrame extends JFrame
 
   	        	mainPanel.remove( showImage );
   	        	mainPanel.removeAll();
-  	        	String sname = "/Users/Shared/Java-Libraries/CourseCD/mediasources/arch.jpg";
 
-
-  	        	DrawImageControlPanel filteredPic = new DrawImageControlPanel(sname);
-  	        	//filteredPic.clearBlue();
+  	        	// create picture object
+  	        	DrawImageControlPanel filteredPic = new DrawImageControlPanel(pictureImage);
   	        	filteredPic.mirrorVertical();
   	        	BufferedImage buff = filteredPic.getBufferedImage();
   	        	
@@ -253,16 +269,15 @@ public class ControlFrame extends JFrame
   	        	JLabel picLabel = new JLabel(new ImageIcon(imageFile));
 
   	        	mainPanel.add(picLabel, BorderLayout.CENTER);
-  	        	mainPanel.revalidate(); //ADD THIS AS WELL
-                mainPanel.repaint();  //ADD THIS AS WELL
-
+  	        	revalidate(); 
+                repaint();  
 
   	        }
   	     }  // End of anonymous inner class
   	     );
     
     JMenuItem filterItemTwo = new JMenuItem( "Filter Two" );
-    filterItemTwo.setMnemonic( 'T' );	// *** shows first t, want second
+    filterItemTwo.setDisplayedMnemonicIndex(7);
     imageMenu.add(filterItemTwo);   
     filterItemTwo.addActionListener(
     	  new ActionListener()  // Beginning of anonymous inner class
@@ -272,12 +287,9 @@ public class ControlFrame extends JFrame
 
     	        	mainPanel.remove( showImage );
     	        	mainPanel.removeAll();
-    	        	String sname = "/Users/Shared/Java-Libraries/CourseCD/mediasources/arch.jpg";
 
-
-    	        	DrawImageControlPanel filteredPic = new DrawImageControlPanel(sname);
+    	        	DrawImageControlPanel filteredPic = new DrawImageControlPanel(pictureImage);
     	        	filteredPic.clearBlue();
-    	        	//filteredPic.mirrorVertical();
     	        	BufferedImage buff = filteredPic.getBufferedImage();
     	        	
     	        	ImageIcon imgIcon = new ImageIcon(buff);
@@ -285,9 +297,8 @@ public class ControlFrame extends JFrame
     	        	JLabel picLabel = new JLabel(new ImageIcon(imageFile));
 
     	        	mainPanel.add(picLabel, BorderLayout.CENTER);
-    	        	mainPanel.revalidate(); //ADD THIS AS WELL
-    	        	mainPanel.repaint();  //ADD THIS AS WELL
-
+    	        	revalidate(); 
+    	        	repaint();  
 
     	        }
     	   }  // End of anonymous inner class
@@ -310,37 +321,17 @@ public class ControlFrame extends JFrame
         	mainPanel.removeAll();
         	bar.add( soundMenu );
         	mainPanel.add( soundPanel, BorderLayout.CENTER );
-        	//mainPanel.removeAll();
-        	// http://www.developer.com/java/other/article.php/2173111/Java-Sound-Playing-Back-Audio-Files-using-Java.htm
+  
+        	// Select sound file
+        	soundFile = "/Users/Shared/Java-Libraries/CourseCD/mediasources/thisisatest.wav";	// hardcoded for my convenience
+        	// soundFile = FileChooser.pickAFile();												// hardcoded for assignment
         	
-        	String soundFile = "/Users/Shared/Java-Libraries/CourseCD/mediasources/thisisatest.wav";
         	DrawSoundControlPanel newSound = new DrawSoundControlPanel(soundFile);
-        	//newSound.explore();
-        	//newSound.doubleFreq();
-        	//newSound.mirror();
-        	//newSound.echo(10);
         	newSound.reverse();
-        	//newSound.play();
-        	//mainPanel.add(picLabel, BorderLayout.CENTER);
-        	mainPanel.revalidate(); //ADD THIS AS WELL
-        	mainPanel.repaint();  //ADD THIS AS WELL
+
+        	revalidate(); 
+        	repaint();  
         	
-        	/*
-        	String sname = "/Users/Shared/Java-Libraries/CourseCD/mediasources/arch.jpg";
-            
-
-        	ImageIcon imgIcon = new ImageIcon(sname);
-        	Image imageFile = imgIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-        	JLabel picLabel = new JLabel(new ImageIcon(imageFile));
-
-
-        	mainPanel.add(picLabel, BorderLayout.CENTER);
-        	mainPanel.revalidate(); //ADD THIS AS WELL
-            mainPanel.repaint();  //ADD THIS AS WELL
-        	*/
-			
-
-
         }
      }  // End of anonymous inner class
      );
@@ -401,7 +392,8 @@ public class ControlFrame extends JFrame
     );     
 
     calcPanel.add( yValTextField );
-    ///////////////////////
+    
+    // Various sound manipulation functions
     soundJButton = new JButton( "PlaySound0" );   
     soundJButton.addActionListener(
       new ActionListener()
@@ -416,35 +408,15 @@ public class ControlFrame extends JFrame
         	mainPanel.removeAll();
         	bar.add( soundMenu );
         	mainPanel.add( soundPanel, BorderLayout.CENTER );
-        	//mainPanel.removeAll();
-        	// http://www.developer.com/java/other/article.php/2173111/Java-Sound-Playing-Back-Audio-Files-using-Java.htm
-        	
-        	String soundFile = "/Users/Shared/Java-Libraries/CourseCD/mediasources/thisisatest.wav";
+
         	DrawSoundControlPanel newSound = new DrawSoundControlPanel(soundFile);
-        	//newSound.explore();
-        	//newSound.doubleFreq();
-        	//newSound.mirror();
-        	//newSound.echo(10);
-        	//newSound.reverse();
+        	
+        	// play default sound
         	newSound.play();
-        	//mainPanel.add(picLabel, BorderLayout.CENTER);
-        	mainPanel.revalidate(); //ADD THIS AS WELL
-        	mainPanel.repaint();  //ADD THIS AS WELL
+
+        	revalidate(); 
+        	repaint();  
         	
-        	
-        	
-        	/*
-          try {       
-            int x = Integer.parseInt( xStr );
-            int y = Integer.parseInt( yStr );
-            int result = x + y;
-            calcJLabel.setText(xStr + " + " + yStr + " = " + result);
-          }
-          catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog( ControlFrame.this, "You must enter a valid number and then <ENTER> for each textbox!", "Invalid Input", JOptionPane.ERROR_MESSAGE );
-            e.printStackTrace();
-          }
-          */
         }
       }
     );
@@ -464,34 +436,14 @@ public class ControlFrame extends JFrame
         	mainPanel.removeAll();
         	bar.add( soundMenu );
         	mainPanel.add( soundPanel, BorderLayout.CENTER );
-        	//mainPanel.removeAll();
-        	// http://www.developer.com/java/other/article.php/2173111/Java-Sound-Playing-Back-Audio-Files-using-Java.htm
-        	
-        	String soundFile = "/Users/Shared/Java-Libraries/CourseCD/mediasources/thisisatest.wav";
+
         	DrawSoundControlPanel newSound = new DrawSoundControlPanel(soundFile);
-        	//newSound.explore();
-        	//newSound.doubleFreq();
+
         	newSound.mirror();
-        	//newSound.echo(10);
-        	//newSound.reverse();
         	newSound.play();
-        	//mainPanel.add(picLabel, BorderLayout.CENTER);
-        	mainPanel.revalidate(); //ADD THIS AS WELL
-        	mainPanel.repaint();  //ADD THIS AS WELL
+        	mainPanel.revalidate(); 
+        	mainPanel.repaint();  
         	
-        	/*
-          try {       
-            int x = Integer.parseInt( xStr );
-            int y = Integer.parseInt( yStr );
-            int result = x + y;
-            calcJLabel.setText(xStr + " + " + yStr + " = " + result);
-          }
-          catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog( ControlFrame.this, "You must enter a valid number and then <ENTER> for each textbox!", "Invalid Input", JOptionPane.ERROR_MESSAGE );
-            e.printStackTrace();
-            
-          }
-          */
         }
       }
     );
@@ -511,35 +463,14 @@ public class ControlFrame extends JFrame
         	mainPanel.removeAll();
         	bar.add( soundMenu );
         	mainPanel.add( soundPanel, BorderLayout.CENTER );
-        	//mainPanel.removeAll();
-        	// http://www.developer.com/java/other/article.php/2173111/Java-Sound-Playing-Back-Audio-Files-using-Java.htm
-        	
-        	String soundFile = "/Users/Shared/Java-Libraries/CourseCD/mediasources/thisisatest.wav";
+
         	DrawSoundControlPanel newSound = new DrawSoundControlPanel(soundFile);
-        	//newSound.explore();
         	newSound.doubleFreq();
-        	//newSound.mirror();
-        	//newSound.echo(10);
-        	//wSound.reverse();
         	newSound.play();
-        	//mainPanel.add(picLabel, BorderLayout.CENTER);
-        	mainPanel.revalidate(); //ADD THIS AS WELL
-        	mainPanel.repaint();  //ADD THIS AS WELL
+
+        	revalidate(); 
+        	repaint();  
         	
-        	
-        	/*
-          try {       
-            int x = Integer.parseInt( xStr );
-            int y = Integer.parseInt( yStr );
-            int result = x + y;
-            calcJLabel.setText(xStr + " + " + yStr + " = " + result);
-          }
-          catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog( ControlFrame.this, "You must enter a valid number and then <ENTER> for each textbox!", "Invalid Input", JOptionPane.ERROR_MESSAGE );
-            e.printStackTrace();
-            
-          }
-          */
         }
       }
     );
@@ -561,34 +492,13 @@ public class ControlFrame extends JFrame
         	mainPanel.removeAll();
         	bar.add( soundMenu );
         	mainPanel.add( soundPanel, BorderLayout.CENTER );
-        	//mainPanel.removeAll();
-        	// http://www.developer.com/java/other/article.php/2173111/Java-Sound-Playing-Back-Audio-Files-using-Java.htm
-        	
-        	String soundFile = "/Users/Shared/Java-Libraries/CourseCD/mediasources/thisisatest.wav";
+
         	DrawSoundControlPanel newSound = new DrawSoundControlPanel(soundFile);
-        	//newSound.explore();
-        	//newSound.doubleFreq();
-        	//newSound.mirror();
-        	//newSound.echo(10);
         	newSound.reverse();
         	newSound.play();
-        	//mainPanel.add(picLabel, BorderLayout.CENTER);
-        	mainPanel.revalidate(); //ADD THIS AS WELL
-        	mainPanel.repaint();  //ADD THIS AS WELL
+        	revalidate(); 
+        	repaint();  
         	
-        	/*
-          try {       
-            int x = Integer.parseInt( xStr );
-            int y = Integer.parseInt( yStr );
-            int result = x + y;
-            calcJLabel.setText(xStr + " + " + yStr + " = " + result);
-          }
-          catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog( ControlFrame.this, "You must enter a valid number and then <ENTER> for each textbox!", "Invalid Input", JOptionPane.ERROR_MESSAGE );
-            e.printStackTrace();
-            
-          }
-          */
         }
       }
     );
@@ -598,7 +508,7 @@ public class ControlFrame extends JFrame
     soundPanel.add( soundJLabel, BorderLayout.CENTER );    
     
     
-    ///////////////////
+    // Calculator function
     calcJButton = new JButton( "Calculate" );   
     calcJButton.addActionListener(
       new ActionListener()
