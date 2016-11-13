@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
+import java.security.SecureRandom;
 import java.awt.event.ItemEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
@@ -24,7 +25,11 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-
+/**
+ * ControlFrame class. Creates all the panels and menu items.
+ * @author sonikp
+ *
+ */
 
 public class ControlFrame extends JFrame
 { 
@@ -36,6 +41,7 @@ public class ControlFrame extends JFrame
   private JTextField yValTextField;
   private JLabel calcJLabel;
   private JButton calcJButton;
+  private DrawImageControlPanel filteredPic;
   private ImageIcon imgIcon;
   private String pictureImage;
   private String soundFile;
@@ -47,6 +53,8 @@ public class ControlFrame extends JFrame
   
   private String xStr;
   private String yStr;
+  
+  SecureRandom randomNum = new SecureRandom();
   
   public ControlFrame(String title)
   {
@@ -68,7 +76,6 @@ public class ControlFrame extends JFrame
     final JMenuBar bar = new JMenuBar();  	// Create a JMenuBar so we can attach menus to it.
     setJMenuBar( bar );  					// Attach the JMenuBar to the ControlFrame.
 
-  
     
     // Submenus
     final JMenu colorMenu = new JMenu( "Color" );
@@ -80,11 +87,13 @@ public class ControlFrame extends JFrame
     final JMenu soundMenu = new JMenu( "Sound" );
     soundMenu.setMnemonic( 'S' );
     
+
     // create file menu
     JMenu fileMenu = new JMenu( "File" );
     fileMenu.setMnemonic( 'F' );
     JMenuItem aboutItem = new JMenuItem( "About..." );
     aboutItem.setMnemonic( 'A' );
+    aboutItem.setToolTipText("About this project");
     fileMenu.add( aboutItem );
     aboutItem.addActionListener(
       new ActionListener()  // Beginning of anonymous inner class
@@ -114,8 +123,7 @@ public class ControlFrame extends JFrame
     // Add the file menu to the JMenuBar.
     bar.add( fileMenu );  					
 
-    
- 
+
     // Menu items
     JMenuItem redItem = new JMenuItem( "Red" );
     colorMenu.add( redItem );
@@ -171,6 +179,7 @@ public class ControlFrame extends JFrame
      
     JMenuItem calcPanelItem = new JMenuItem( "Calculate" );
     calcPanelItem.setMnemonic( 'C' );
+    calcPanelItem.setToolTipText("Add two number together");
     fileMenu.add( calcPanelItem );
     calcPanelItem.addActionListener(
       new ActionListener()
@@ -194,6 +203,7 @@ public class ControlFrame extends JFrame
     
     JMenuItem drawPanelItem = new JMenuItem( "DrawPanel" );
     drawPanelItem.setMnemonic( 'D' );
+    drawPanelItem.setToolTipText("Change properties of an oval image");
     fileMenu.add( drawPanelItem );
     drawPanelItem.addActionListener(
       new ActionListener()
@@ -213,9 +223,10 @@ public class ControlFrame extends JFrame
       }
     );
     
-    // Task 1: 
+    // Task 1: Show image and apply filters
     JMenuItem showImage = new JMenuItem( "ShowImage..." );
     showImage.setMnemonic( 'I' );
+    showImage.setToolTipText("Select image for applying filters");
     fileMenu.add( showImage );
     showImage.addActionListener(
       new ActionListener()  // Beginning of anonymous inner class
@@ -229,9 +240,9 @@ public class ControlFrame extends JFrame
         	mainPanel.removeAll();
         	bar.add( imageMenu );
         	
-        	pictureImage = "/Users/Shared/Java-Libraries/CourseCD/mediasources/arch.jpg"; 	// hardcoded for my convenience
-//        	pictureImage = FileChooser.pickAFile();											// hardcoded for assignment
-
+//        	pictureImage = "/Users/Shared/Java-Libraries/CourseCD/mediasources/arch.jpg"; 	// hardcoded for my convenience
+        	pictureImage = FileChooser.pickAFile();											// hardcoded for assignment
+        	        	
         	// set  image as object and then assign it to JPanel
         	imgIcon = new ImageIcon(pictureImage);
         	Image imageFile = imgIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
@@ -249,6 +260,7 @@ public class ControlFrame extends JFrame
     // Filters applied to ShowImage function
     JMenuItem filterItemOne = new JMenuItem( "Filter One" );
     filterItemOne.setMnemonic( 'O' );
+    filterItemOne.setToolTipText("Mirrors image");
     imageMenu.add(filterItemOne);
     filterItemOne.addActionListener(
   	  new ActionListener()  // Beginning of anonymous inner class
@@ -260,7 +272,7 @@ public class ControlFrame extends JFrame
   	        	mainPanel.removeAll();
 
   	        	// create picture object
-  	        	DrawImageControlPanel filteredPic = new DrawImageControlPanel(pictureImage);
+  	        	filteredPic = new DrawImageControlPanel(pictureImage);
   	        	filteredPic.mirrorVertical();
   	        	BufferedImage buff = filteredPic.getBufferedImage();
   	        	
@@ -278,6 +290,7 @@ public class ControlFrame extends JFrame
     
     JMenuItem filterItemTwo = new JMenuItem( "Filter Two" );
     filterItemTwo.setDisplayedMnemonicIndex(7);
+    filterItemTwo.setToolTipText("Removes blue color from pixels");
     imageMenu.add(filterItemTwo);   
     filterItemTwo.addActionListener(
     	  new ActionListener()  // Beginning of anonymous inner class
@@ -288,7 +301,7 @@ public class ControlFrame extends JFrame
     	        	mainPanel.remove( showImage );
     	        	mainPanel.removeAll();
 
-    	        	DrawImageControlPanel filteredPic = new DrawImageControlPanel(pictureImage);
+    	        	filteredPic = new DrawImageControlPanel(pictureImage);
     	        	filteredPic.clearBlue();
     	        	BufferedImage buff = filteredPic.getBufferedImage();
     	        	
@@ -305,9 +318,10 @@ public class ControlFrame extends JFrame
     	   );
     
     
-    // Task 1: 
+    // Task 2: Select a sound and apply filters to the sounds
     JMenuItem soundImage = new JMenuItem( "ShowSound..." );
     soundImage.setMnemonic( 'I' );
+    soundImage.setToolTipText("Play a sound file and apply filters");
     fileMenu.add( soundImage );
     soundImage.addActionListener(
       new ActionListener()  // Beginning of anonymous inner class
@@ -323,8 +337,8 @@ public class ControlFrame extends JFrame
         	mainPanel.add( soundPanel, BorderLayout.CENTER );
   
         	// Select sound file
-        	soundFile = "/Users/Shared/Java-Libraries/CourseCD/mediasources/thisisatest.wav";	// hardcoded for my convenience
-        	// soundFile = FileChooser.pickAFile();												// hardcoded for assignment
+        	//soundFile = "/Users/Shared/Java-Libraries/CourseCD/mediasources/thisisatest.wav";	// hardcoded for my convenience
+        	soundFile = FileChooser.pickAFile();												// hardcoded for assignment
         	
         	DrawSoundControlPanel newSound = new DrawSoundControlPanel(soundFile);
         	newSound.reverse();
@@ -336,11 +350,62 @@ public class ControlFrame extends JFrame
      }  // End of anonymous inner class
      );
     
+    // Task 3: Perform an additional function
+    JMenuItem additionalFeature = new JMenuItem( "Additional Feature..." );
+    additionalFeature.setMnemonic( 'I' );
+    additionalFeature.setToolTipText("Select different image, if initial image not already selected");
+    fileMenu.add( additionalFeature );
+    additionalFeature.addActionListener(
+      new ActionListener()  // Beginning of anonymous inner class
+      {
+        public void actionPerformed( ActionEvent event )
+        {
+        	
+
+            mainPanel.remove( drawPanel );
+            mainPanel.remove( imageMenu );
+            bar.remove( colorMenu );
+            bar.remove( imageMenu );
+            bar.remove( soundMenu );
+            mainPanel.remove( drawPanel );
+            mainPanel.remove( imageMenu );
+            mainPanel.remove( widthJSlider );
+        	mainPanel.removeAll(); 
+        	
+        	if ( pictureImage == null)
+        	{
+
+        		pictureImage = FileChooser.pickAFile();
+//        		pictureImage = "/Users/Shared/Java-Libraries/CourseCD/mediasources/anthony.jpg";
+        	}
+
+        	
+        	filteredPic = new DrawImageControlPanel(pictureImage);
+        	
+        	filteredPic.edgeDetection(randomNum.nextInt(20));	
+        	
+        	BufferedImage buff = filteredPic.getBufferedImage();
+
+        	ImageIcon imgIcon = new ImageIcon(buff);
+
+
+        	Image imageFile = imgIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        	JLabel picLabel = new JLabel(new ImageIcon(imageFile));
+
+        	mainPanel.add(picLabel, BorderLayout.CENTER);
+        	revalidate(); 
+        	repaint();  
+        	
+
+        }
+     }  // End of anonymous inner class
+     );
     
     
     
     JMenuItem exitItem = new JMenuItem( "Exit" );
     exitItem.setMnemonic( 'x' );
+    exitItem.setToolTipText("Good bye, come back real soon");
     fileMenu.add( exitItem );
     exitItem.addActionListener(
       new ActionListener()
@@ -366,7 +431,8 @@ public class ControlFrame extends JFrame
         }
       }
     );
-        
+  
+    
     xValTextField = new JTextField( 3 );
     xValTextField.addActionListener(
       new ActionListener()
@@ -394,7 +460,8 @@ public class ControlFrame extends JFrame
     calcPanel.add( yValTextField );
     
     // Various sound manipulation functions
-    soundJButton = new JButton( "PlaySound0" );   
+    soundJButton = new JButton( "PlaySound0" );
+    soundJButton.setToolTipText("Play selected sound");
     soundJButton.addActionListener(
       new ActionListener()
       {
@@ -422,7 +489,8 @@ public class ControlFrame extends JFrame
     );
     soundPanel.add( soundJButton );
     
-    soundJButton1 = new JButton( "PlaySound1" );   
+    soundJButton1 = new JButton( "PlaySound1" );
+    soundJButton1.setToolTipText("Mirror selected sound");
     soundJButton1.addActionListener(
       new ActionListener()
       {
@@ -449,7 +517,8 @@ public class ControlFrame extends JFrame
     );
     soundPanel.add( soundJButton1 );
     
-    soundJButton2 = new JButton( "PlaySound2" );   
+    soundJButton2 = new JButton( "PlaySound2" );  
+    soundJButton2.setToolTipText("Double frequency of selected sound");
     soundJButton2.addActionListener(
       new ActionListener()
       {
@@ -479,7 +548,8 @@ public class ControlFrame extends JFrame
     soundJLabel = new JLabel();
     soundPanel.add( soundJLabel, BorderLayout.CENTER );
     
-    soundJButton3 = new JButton( "PlaySound3" );   
+    soundJButton3 = new JButton( "PlaySound3" ); 
+    soundJButton3.setToolTipText("Reverse selected sound");
     soundJButton3.addActionListener(
       new ActionListener()
       {

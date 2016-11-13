@@ -3,6 +3,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
+/**
+ * Part of DrawControlApp.
+ * @author Part of original assignment
+ *
+ */
+
 public class DrawControlPanel extends JPanel
 {
   private Color fillColor = Color.CYAN;
@@ -16,7 +22,7 @@ public class DrawControlPanel extends JPanel
   public void paintComponent( Graphics g )
   {
     super.paintComponent( g );  // invoke the superclass paintComponent
-    this.setBackground( Color.WHITE );
+    this.setBackground( Color.BLACK );
     g.setColor( fillColor );
     g.fillOval( 50, 50, ovalWidth, 60 );
   }

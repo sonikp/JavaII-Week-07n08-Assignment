@@ -6,10 +6,15 @@ import java.text.*;
 import java.util.*;
 import java.util.List; // resolves problem with java.awt.List and java.util.List
 
-// imported from Assignment 04
+/**
+ * Image methods for DrawControlApp. Assignment week 07
+ * @author sonikp
+ *
+ */
 
 public class DrawImageControlPanel extends Picture
 {
+		
 	// constructors
 	public DrawImageControlPanel() 
 	{
@@ -47,7 +52,6 @@ public class DrawImageControlPanel extends Picture
 			  
 		  for ( Pixel value : pixelArray)
 		  {
-			  //System.out.println(value.getRed() + " " + value.getGreen() + " " + value.getBlue());
 			  value.setBlue(0);
 		  }
 	  }
@@ -73,6 +77,45 @@ public class DrawImageControlPanel extends Picture
 			  
 		  }
 	  }
+
+	  
+	  public void edgeDetection(int amount)
+	  {
+		  Pixel topPixel = null;
+		  Pixel bottomPixel = null;
+		  double topAverage = 0.0;
+		  double bottomAverage = 0.0;
+		  int endY = this.getHeight() - 1;
+		  
+		  // loop through y values from 0 to height - 1, (since compare to below pixel)
+		  for ( int y = 0; y < endY; y++)
+		  {
+			  // loop through the x values from 0 to width
+			  for ( int x = 0; x < this.getWidth(); x++)
+			  {
+				  // get the top and bottom pixels
+				  topPixel = this.getPixel(x, y);
+				  bottomPixel = this.getPixel(x, y + 1);
+				  
+				  // get the color average for the two pixels
+				  topAverage = topPixel.getAverage();
+				  bottomAverage = bottomPixel.getAverage();
+				  
+				  // check if absolute value of the difference is less than the amount
+				  if ( Math.abs(topAverage - bottomAverage) < amount)
+				  {
+					  topPixel.setColor(Color.WHITE);
+				  }
+				  else
+				  {
+					  topPixel.setColor(Color.BLACK);
+				  }
+			  }
+		  }
+	  }
+
+	  
+	  
 	  
 	  /**
 	   * Method to return a string with information about this picture.

@@ -1,6 +1,12 @@
 import java.io.*;
 
 
+/**
+ * Sound methods for DrawControlApp. Assignment week 07
+ * @author sonikp
+ *
+ */
+
 public class DrawSoundControlPanel extends Sound
 {
 	
@@ -47,7 +53,7 @@ public class DrawSoundControlPanel extends Sound
 	    // let the parent class handle this
 	    super(copySound);
 	  }
-	  ///////////////////methods/////////////////////// Week 4/5 Notes/////////
+	  ///////////////////methods///////////////////
 	  
 		public void echo(int delay)
 		{
